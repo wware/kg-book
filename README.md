@@ -10,6 +10,13 @@ As stuff is discarded, we look to the Python source files in the `kgraph` reposi
 
 This `kg-book` repository is for the first of the two tracks.
 
+```bash
+pandoc outline.md \
+    --metadata title="Knowledge Graphs from Unstructured Text" \
+    --epub-cover-image=CoverImage.png \
+    -o outline.epub
+```
+
 ---
 
 ### Track 1: The Book
