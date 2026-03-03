@@ -24,7 +24,7 @@ The gist of this book (beyond providing a lot of how-to information) is that a k
 
 # Part I: The Landscape
 
-## Chapter 1: Why Do We Want Knowledge Graphs?
+## Chapter 1: Why do we want to build Knowledge Graphs?
 
 ### Large Language Models Work Great
 
@@ -34,7 +34,7 @@ We ask them questions about the capitals of countries, or about a chemical formu
 
 Correctness was never a primary design priority for LLMs. They are neural networks trained on large corpora. They try to predict the next bit of text, following statistical patterns derived from the training set. As long as our questions stay well within the training set, we can expect answers that are correct most of the time.
 
-When we stray outside the training set contents, the LLM has no mechanism or structure to guage correctness and no way to correct an answer. We get answers that are articulate, confident, intelligent-sounding, and wrong. My brother told an LLM:
+When we stray outside the training set contents, the LLM has no mechanism or structure to gauge correctness and no way to correct an answer. We get answers that are articulate, confident, intelligent-sounding, and wrong. My brother told an LLM:
 
 > I live near a carwash and the weather is warm and sunny. I want to get my car washed. Should I walk or drive there?
 
@@ -66,7 +66,13 @@ Knowledge graphs provide a unique return on investment. They are simple data str
 
 ### The Idea That Wouldn't Die
 
-Opens with the observation that humans have been trying to make machines that *know things* -- not just store data -- for as long as there have been computers. Sets up the through-line of the chapter: repeated attempts, repeated partial successes, repeated stalls at the same bottleneck.
+There is a fantasy at the heart of computing that is almost as old as computers themselves: the machine that doesn't just store and retrieve facts but *understands* them. Not a filing cabinet you query with the right syntax. Not a search engine that hands you links and wishes you luck. A machine that knows things the way a person knows things -- that can be asked a question in plain language, draw on what it understands about the subject, and tell you something true and useful in return.
+
+This fantasy has motivated some of the most ambitious projects in the history of computer science. It has attracted brilliant people, absorbed enormous funding, and produced genuine results -- and then, repeatedly, stalled. Not because the researchers were wrong about what they were trying to build. Because building it turned out to be much harder than it looked, for reasons that took decades to fully understand.
+
+That history is worth understanding, because the stall always happened in the same place. Not at the reasoning end -- humans got surprisingly far at encoding the *logic* of a domain, the rules and relationships and inference patterns that experts use. The wall was always at the other end: getting knowledge *in*. Turning the vast, messy, ambiguous record of what humans know -- written in papers and books and case notes and specifications, in the imprecise and context-dependent medium of natural language -- into something a machine could actually reason over. That problem defeated every approach until very recently.
+
+This chapter is the story of those attempts. It is not a story of failure. The people who built expert systems in the 1980s, who designed the Semantic Web in the 1990s, who curated Freebase in the 2000s -- they were right about what was needed. They were working with the tools available to them. The story is worth telling because in retrospect we can see the same general idea approached from different directions, stalling at the same bottleneck, until the idea could finally get the traction it needed.
 
 ### What the Frog's Eye Tells Us
 
@@ -76,7 +82,7 @@ The experiment was straightforward in concept. Lettvin and his colleagues placed
 
 The implications reached beyond frog vision. If perception in even a simple vertebrate is not passive reception of raw data but active, structured, selective extraction of semantically meaningful features, then the prevailing model of how biological intelligence works -- sense first, interpret later -- was badly wrong. Meaning isn't added to perception after the fact. It's built into the extraction process itself. Intelligence, biological or artificial, doesn't work by accumulating raw data and reasoning over it afterward. It works by extracting structured signals and reasoning over *those*.
 
-This turns out to be a claim about cognition in general, not just about frogs. The AI researchers who would spend the following decades trying to build systems that *know things* -- rather than merely store and retrieve them -- were, whether they realized it or not, trying to do in software what the frog's retina was already doing in wetware.
+What the frog's eye tells us is that the process of importing data must impose structure on that data if subsequent reasoning is to succeed.
 
 ### Semantic Networks and the Frame Problem
 
@@ -102,23 +108,45 @@ Hofstadter's central concern is how meaning arises in formal systems -- how symb
 
 This is precisely the claim that frames and semantic networks were making, and that knowledge graphs embody. A node in a knowledge graph isn't meaningful in isolation -- "BRCA1" as a string of characters means nothing. It means something because of its typed relationships to other nodes: it *encodes* a protein, it *is associated with* breast cancer risk, it *interacts with* other genes, it *has synonym* "breast cancer type 1 susceptibility protein." The meaning is in the web, not in the label.
 
-Hofstadter goes further in a way that connects to Chapter 5's argument. He distinguishes between what he calls *active symbols* and passive ones. A passive symbol is just a token that gets manipulated by external rules -- the symbols in a formal logical system, for instance. An active symbol is one that participates in its own interpretation, that has something like internal structure that fires in response to the right context. His argument is that genuine intelligence requires active symbols -- that what brains do, and what any sufficiently sophisticated reasoning system must do, is maintain a network of active symbols that mutually constrain and activate each other.
+Hofstadter goes further in a way that connects to Chapter 4's argument. He distinguishes between what he calls *active symbols* and passive ones. A passive symbol is just a token that gets manipulated by external rules -- the symbols in a formal logical system, for instance. An active symbol is one that participates in its own interpretation, that has something like internal structure that fires in response to the right context. His argument is that genuine intelligence requires active symbols -- that what brains do, and what any sufficiently sophisticated reasoning system must do, is maintain a network of active symbols that mutually constrain and activate each other.
 
 The knowledge graph, in this framing, is an attempt to make active symbols computationally tractable. Not just a passive lookup table but a structure where the typed relationships do real work -- where querying "what treats this disease" is not a string match but a traversal of a semantic network that carries the meaning of "treats" as a typed predicate with defined subject and object constraints. The graph doesn't just store the claim; it participates in the reasoning.
 
-There's a passage in GEB where Hofstadter discusses the difference between the *map* and the *territory* -- between a representation and the thing it represents -- and argues that sufficiently rich representations develop a kind of isomorphism with their subject that amounts to genuine understanding. The representation isn't just *about* the territory; it captures enough of the territory's structure that reasoning over the representation produces true results about the territory. This is, almost word for word, the argument your Chapter 5 is making about knowledge graphs and grounded inference.
+There's a passage in GEB where Hofstadter discusses the difference between the *map* and the *territory* -- between a representation and the thing it represents -- and argues that sufficiently rich representations develop a kind of isomorphism with their subject that amounts to genuine understanding. The representation isn't just *about* the territory; it captures enough of the territory's structure that reasoning over the representation produces true results about the territory. This is, almost word for word, the argument your Chapter 4 is making about knowledge graphs and grounded inference.
 
-The connection you could draw in the book is something like: Hofstadter gave us the theoretical vocabulary for why symbol systems need to be relational rather than atomic, why meaning is constituted by connection rather than inherent in labels, and why a sufficiently structured representation can support genuine inference rather than mere retrieval. Minsky gave us the cognitive architecture -- frames as the natural unit of structured knowledge. The knowledge graph is what you get when you take both of those arguments seriously and ask: what does this look like as buildable infrastructure?
-
-That lineage -- Quillian's semantic networks, Minsky's frames, Hofstadter's theory of meaning, arriving at the knowledge graph as a practical construction -- is the intellectual through-line of Chapter 2, and it's a stronger story for having all three in it.
+Hofstadter gave us the theoretical vocabulary for why symbol systems need to be relational rather than atomic, why meaning is constituted by connection rather than inherent in labels, and why a sufficiently structured representation can support genuine inference rather than mere retrieval. Minsky gave us the cognitive architecture -- frames as the natural unit of structured knowledge. The knowledge graph is what you get when you take both of those arguments seriously and ask: what does this look like as buildable infrastructure?
 
 ### The Logic Wars
 
-Expert systems, Prolog, description logics. Why they worked beautifully in narrow domains and collapsed under the weight of the real world. The brittleness problem.
+The expert systems of the 1970s and 80s were not a wrong turn. They were a genuine insight, implemented with the tools available, and in the right conditions they worked remarkably well.
+
+The insight was this: if you could get a domain expert to articulate the rules they used to reason -- the *if-this-then-that* chains that an experienced diagnostician or engineer carried in their head -- you could encode those rules in a formal system and the machine could apply them. MYCIN, the system built at Stanford in the early 1970s to diagnose bacterial infections and recommend antibiotics, could outperform medical residents on its target task. XCON, deployed by Digital Equipment Corporation to configure VAX computer systems, was saving the company tens of millions of dollars a year by the early 1980s. These weren't demos. They were production systems doing real work.
+
+The problem was at the edges of the recorded knowledge domain. A domain expert can articulate the rules they consciously apply, but expertise isn't just conscious rules -- it's also the vast background of common sense and contextual judgment that experts exercise without noticing they're doing it. Ask a doctor what rules she uses to diagnose a bacterial infection and she can tell you. Ask her what rules she uses to know that a patient who says "I feel fine" while running a 104-degree fever is not, in fact, fine -- and she'll struggle, because that knowledge isn't stored as rules. It's pattern recognition built from years of experience, running below the level of explicit articulation.
+
+Expert systems couldn't capture that. They could only encode what the expert could say out loud. Everything else -- the background assumptions, the common sense, the contextual adjustments -- had to be anticipated and written down by a knowledge engineer. And it turned out that the space of things you had to anticipate was essentially unbounded. Add a new drug to MYCIN's domain and suddenly you needed new rules, and new rules to handle the interactions with old rules, and new rules to handle the exceptions to those interactions. The system that worked beautifully on the original narrow problem became brittle the moment the world asked it a question slightly outside its prepared territory.
+
+Prolog and the description logics that followed were attempts to put the reasoning on a more rigorous mathematical footing. If the problem with expert systems was that the rules were ad hoc and hard to maintain, maybe formal logic would help -- a cleaner representation that could be reasoned over systematically, whose consequences could be derived rather than enumerated. The logic was sound. The problem was the same: you still had to get the knowledge in. Formal logic made the representation more principled, but it didn't make knowledge acquisition any less expensive or any less brittle when the domain proved more complex than the ontology anticipated.
+
+By the early 1990s, the expert system boom had become the AI winter. Funding dried up, companies that had bet heavily on the technology quietly wrote off their investments, and the field moved on. What it left behind was a lesson that wouldn't fully land for another thirty years: the bottleneck was never the reasoning. It was always importing the knowledge at scale.
 
 ### The Semantic Web and the RDF Era
 
-Berners-Lee's grand vision. Why the vision was sound but the adoption economics were broken. Linked Data as a partial redemption.
+Tim Berners-Lee invented the World Wide Web and then, almost immediately, started worrying that he'd built the wrong thing.
+
+The web he'd built was for humans. Pages of text and images, linked to other pages, navigable by people who could read and follow links and make inferences about what they were looking at. Machines could fetch the pages, but they couldn't understand them -- couldn't know that a page about a restaurant contained a phone number, or that a page about a drug contained a dosage, or that two pages from different sources were talking about the same person. The web was a vast store of human knowledge wrapped in a format that machines could retrieve but not comprehend.
+
+His vision for fixing this, described in a 2001 *Scientific American* article, was the Semantic Web. The idea was to augment the existing web with structured, machine-readable data, encoded in a standard format called RDF (Resource Description Framework), so that software agents could traverse the web and actually *understand* what they were reading. Not just fetch a page about a drug, but know that the page described a drug, that the drug had a name and a manufacturer and a set of indications, and that those indications were linked to diseases described on other pages. The web of documents would become a web of data.
+
+The vision was sound. The problem was asking people to do a lot of work for benefits that mostly accrued to others.
+
+Encoding your content as structured RDF was significantly more effort than writing HTML. The tools were complex, the standards were baroque, and the payoff for any individual publisher was unclear -- the value of structured data emerges when many sources use compatible schemas, and in 2001 nobody was. The classic adoption problem: the network is worth joining only when enough other people have joined, but nobody wants to be first. Only a few large institutions -- libraries, government data publishers, some academic databases -- embraced the vision seriously.
+
+What emerged from the wreckage was Linked Data, a more pragmatic interpretation of the same basic idea. Instead of demanding that everyone adopt a comprehensive semantic framework, Linked Data asked only that you use URIs to identify things, link to related URIs from other datasets, and publish whatever structured data you had in whatever simple format you could manage. It was a retreat from the grand vision, but it was a retreat to something that actually worked. DBpedia -- a structured version of Wikipedia extracted by the community -- became a hub that linked to dozens of other datasets. Wikidata grew into something genuinely useful. The government open data movement produced real structured datasets. A modest version of the dream was alive.
+
+The community sold Linked Data coffee mugs to encourage adoption. It was that kind of movement, idealistic, slightly desperate, held together by enthusiasm and standards documents. The web did not restructure itself accordingly.
+
+But the fundamental problem remained. Linked Data worked well for knowledge that someone had already structured. The vast majority of what the web contained -- the papers, the articles, the reports, the case studies, all the text -- remained opaque. You could link your structured data about a drug to Wikipedia's article about that drug, but you couldn't automatically extract the structured data from the article in the first place. The extraction bottleneck was still there, just slightly better acknowledged.
 
 ### The Industrial Knowledge Graph
 
@@ -132,56 +160,73 @@ But it also revealed, somewhat quietly, what the approach could *not* do. The Go
 
 Freebase itself was shut down in 2016, its data migrated to Wikidata, the open collaborative knowledge base that now serves as one of the primary structured sources for the Knowledge Graph. The arc is instructive: even Google, with essentially unlimited engineering resources, found it easier to rely on human-curated structured data than to solve the extraction problem at the quality level required for production use. The extraction bottleneck wasn't a failure of ambition. It was a genuine hard problem that the tools of the time couldn't crack.
 
-**The Extraction Bottleneck** -- Every era of knowledge representation described in this chapter ran into the same wall, approached from a different direction. The semantic networks of the 1960s and 70s had to be hand-built by knowledge engineers -- a process so labor-intensive that the resulting systems covered narrow domains at best. The expert systems of the 80s required domain experts to spend months encoding their knowledge as rules, and still couldn't capture the tacit understanding that experts applied effortlessly. The Semantic Web vision of the 90s and 2000s imagined a world where structured data would be published everywhere -- but the incentive for any individual publisher to do the hard work of structuring their content for others' benefit was never quite strong enough. And Google's Knowledge Graph, for all its scale, was built from the structured sources that already existed: databases, encyclopedias, factbooks. It was excellent at encoding what had already been made explicit. It had no way to reach the knowledge that hadn't.
+### The Extraction Bottleneck
+
+Every era of knowledge representation described in this chapter ran into the same wall, approached from a different direction. The semantic networks of the 1960s and 70s had to be hand-built by knowledge engineers -- a process so labor-intensive that the resulting systems covered narrow domains at best. The expert systems of the 80s required domain experts to spend months encoding their knowledge as rules, and still couldn't capture the tacit understanding that experts applied effortlessly. The Semantic Web vision of the 90s and 2000s imagined a world where structured data would be published everywhere -- but the incentive for any individual publisher to do the hard work of structuring their content for others' benefit was never quite strong enough. And Google's Knowledge Graph, for all its scale, was built from the structured sources that already existed: databases, encyclopedias, factbooks. It was excellent at encoding what had already been made explicit. It had no way to reach the knowledge that hadn't.
 
 The uncomfortable arithmetic is this: the vast majority of what humanity knows is written down in natural language -- in papers, books, reports, articles, case studies, clinical notes, legal opinions, engineering specifications, and a million other forms of text. This is where the knowledge lives. Not in databases. Not in ontologies. In sentences. And sentences, it turns out, are extraordinarily difficult to machine-read at the level required to extract structured, typed, confident knowledge from them.
 
-The bottleneck persisted, decade after decade, as the tools improved incrementally but the fundamental economics of the problem remained the same. The knowledge was in the text. Getting it out reliably, at scale, across domains, remained out of reach.
+We'll later return to this sentence taken from the cancer literature. It illustrates some of the linguistic twists and turns that humans handle effortlessly.
 
-Until, around 2022 and 2023, it suddenly wasn't. The rest of this book is about what changed, and what you can do with it.
+> Patients treated with the combination showed significantly reduced tumor burden compared to controls, though the effect was attenuated in those with prior platinum exposure.
 
----
-
-## Chapter 3: The Dream
-
-*Read this chapter with the awareness that the dream is grounded in the thesis: structured knowledge representation is the cognitive substrate for reasoning.*
-
-### The Computer That Knows
-
-Science fiction of the 1960s gave us a recurring dream: the computer you could simply ask. Not a database to query with the right syntax, not a search engine that returns links -- a machine that understood your question, knew the relevant facts, and told you the answer. HAL 9000, Multivac, the ship's computer that the captain addresses in plain English. The specifics varied but the fantasy was consistent: a machine that *knows things* the way a very well-read person knows things, and can reason from that knowledge rather than merely retrieve it. What would it actually take to build that?
+The knowledge extraction bottleneck persisted as the tools slowly improved, but the fundamental economics of the problem remained the same. The knowledge was in the text. Getting it out reliably, at scale, across domains, remained out of reach.
 
 ### The Robot Scientist
 
-Ross King's Adam and Eve systems. What they actually did: autonomous hypothesis generation, experimental design, execution, and belief updating. The yeast gene function discoveries. Why this is the most important existence proof in the field, and why it didn't make bigger waves. Adam and Eve did not just use a knowledge graph as a database; they used it as the substrate for autonomous reasoning. Make that connection explicit.
+In 2009, a paper appeared in *Science* with a deceptively modest title: "The Automation of Science." Its author, Ross King, then at Aberystwyth University, described a system called Adam that had done something no machine had done before: it had conducted original scientific research autonomously, from hypothesis to experiment to conclusion, without a human in the loop.
+
+Adam's domain was the functional genomics of baker's yeast, *Saccharomyces cerevisiae*. Yeast is a well-studied organism, but in 2009 the functions of a significant fraction of its genes were still unknown. Adam was given access to a knowledge graph of yeast biology -- the known metabolic pathways, the existing gene-function assignments, the databases of protein interactions -- and tasked with identifying genes whose functions could be inferred and tested.
+
+What Adam did, step by step, was this: it reasoned over the knowledge graph to identify gaps -- genes that, given what was known about the pathway, *ought* to encode a particular enzyme but for which no such function had been assigned. It formulated these gaps as hypotheses. It designed experiments to test the hypotheses, in the form of instructions to a robotic laboratory system. It ran the experiments. It observed the results. It updated its beliefs about the knowledge graph accordingly. And then it began again.
+
+This was not assisted science. It was not accelerated science in the sense of a human scientist working faster with better tools. The scientific method -- observe, hypothesize, experiment, update -- was running autonomously. Adam identified and confirmed the functions of several previously uncharacterized yeast genes. The discoveries were real. They were published. They held up.
+
+King went on to build Eve, a successor system focused on drug discovery, which identified a promising compound for treating malaria by screening molecules against parasite targets in an automated laboratory. Adam and Eve were not the most capable systems ever built for their respective tasks -- human scientists with enough time and resources could do what they did. What they demonstrated was that the *process* of science could be formalized and automated, given a rich enough knowledge representation to reason over.
+
+The question that Adam poses -- and that this book is, in part, an attempt to answer -- is what happens when that knowledge representation is no longer limited to a single well-curated domain, and no longer requires a team of knowledge engineers to build by hand.
 
 ### The Cross-Disciplinary Machine
 
-The argument that the most important insights may live *between* disciplines. A graph spanning medicine, chemistry, ecology, and materials science can see structural analogies invisible to any specialist. Historical breakthroughs that were essentially cross-domain pattern matches made by unusually well-read humans -- and the argument that a sufficiently rich KG does this systematically.
+Adam's knowledge graph was narrow by design. It covered yeast biology with enough depth to support genuine inference, and it covered almost nothing else. That narrowness was what made the system tractable in 2009 -- and it was also the ceiling on what Adam could discover. The hypotheses Adam could form were hypotheses *within* yeast biology. It could notice that a metabolic pathway had a gap and infer what might fill it. It could not notice that a compound studied in a completely different context -- say, a natural product investigated for antimicrobial properties in a separate literature -- had structural properties that might make it relevant to the yeast pathway it was reasoning about. That connection would require a graph that spanned both domains and knew that the relevant entities in each were related.
 
-### The Machine That Knew Too Much
+The reason cross-disciplinary reasoning is hard isn't that the connections don't exist. They do, and the history of science is full of examples: Fleming noticing that a mold was killing his bacterial cultures, Krebs recognizing the cyclic nature of metabolic reactions by drawing on observations scattered across the biochemistry literature, the structural biologists whose work on crystallography turned out to be essential to understanding DNA. These weren't lucky accidents. They were pattern matches made by unusually well-read people who happened to have enough breadth to see a connection that specialists couldn't.
 
-HAL 9000 as the dark mirror of the dream. Not a cautionary tale about AI turning evil -- something more philosophically interesting: a cautionary tale about underestimating what genuine language comprehension *implies*. The crew thought they understood the boundaries of HAL's capabilities and were wrong. A system that understands speech well enough to transcribe it understands speech well enough to read lips through a porthole. HAL as Shakespearean villain: always the smartest person in the room, always two moves ahead, always exploiting the gap between what others *think* they know and what is actually true. The lesson isn't fear -- it's epistemic humility about the capabilities you're creating. Plants a thematic tension that pays off in Part IV: the same capability that finds the unexpected drug interaction that saves lives is the capability that surfaces the unexpected inference you didn't intend to enable.
+A knowledge graph spanning multiple domains can, in principle, make those pattern matches systematic rather than serendipitous. But only if it can recognize that the entities are the same across domains -- that the gene discussed in a genetics paper and the gene discussed in an oncology paper are the same node, not two separate strings that happen to look similar. This is the canonical identity problem again, now with stakes beyond bookkeeping: without it, the multi-domain graph isn't a connected network of knowledge, it's a collection of islands. Canonical identity, anchored to established ontological authorities, is what builds the bridges.
+
+This is already happening, in a limited way, at the level of encyclopedic knowledge. Wikidata links entities across domains -- a drug, a disease, a researcher, an institution -- with stable identifiers that let structured data from different sources be combined and traversed. DBpedia does something similar for the structured content embedded in Wikipedia. These systems are genuinely useful for factual queries that span domains. What they cannot do is reach the research frontier -- the findings that are in papers but not yet in encyclopedias, the preliminary results that haven't been replicated enough to earn a Wikidata entry, the connections that haven't been noticed yet because no one has read both papers.
 
 ### The Gap Is the Book
 
-Closing beat: the dream is coherent, the destination is visible. The missing piece is reliable extraction of structured, connected, provenance-tracked knowledge from unstructured text at scale.
+Adam existed. The cross-disciplinary machine is not a fantasy — it's an engineering problem with a visible shape. The destination is real.
+
+What stands between here and there is the same wall that stopped every previous attempt: getting knowledge in. Adam worked because its domain was narrow enough, and structured enough, that the knowledge could be loaded by hand. Extending that to the full body of published science — millions of papers, across every discipline, in every language, updated continuously as new results arrive — requires something Adam didn't have: a way to read the literature and extract structured, typed, provenance-tracked knowledge from it automatically, reliably, and at scale.
+
+That is the missing piece. It is also, as of a few years ago, newly within reach. The rest of this book is about how to build it.
 
 ---
 
-## Chapter 4: What Is a Knowledge Graph, Really?
+## Chapter 3: What Is a Knowledge Graph, Really?
 
-### Cutting Through the Buzzword Fog
+### A working definition in four parts
 
-A working definition that will hold for the rest of the book.
+These four properties together distinguish a knowledge graph from a labeled graph, a property graph, a document store, or a well-structured relational database. Any of the four can be relaxed for pragmatic reasons -- and sometimes they should be -- but relaxing them has costs that are worth understanding before you do it.
 
-> A knowledge graph is a directed graph in which:
-> 
-> - **Nodes represent entities** -- discrete, identifiable things: people, places, substances, concepts, events. Not properties, not values, not free-floating text. Things that can be named, referenced, and recognized across sources -- and that's the critical word: *recognized*. When two papers mention the same gene, the same drug, the same disease, a knowledge graph can know they're talking about the same thing. That's what makes cross-source reasoning possible at all. Without it, you're not combining knowledge from multiple sources -- you're just accumulating text.
-> - **Edges represent typed relationships** -- not generic connections but semantically defined predicates with a direction and a meaning. An edge labeled "inhibits" between a drug and an enzyme is a different kind of claim from one labeled "co-occurs with," and the distinction is not cosmetic.
-> - **Every entity has a canonical identity** -- a stable identifier that persists across documents, authors, and time. The same gene is the same node whether a paper calls it by its official symbol, a common alias, or a misspelling. Resolving that multiplicity to a single identity is not bookkeeping; it's what makes the graph useful.
-> - **Every relationship carries provenance** -- a traceable record of where the claim came from, by what method it was established, and with what confidence. A relationship without provenance is an assertion of unknown quality. A relationship with provenance is evidence.
-> 
-> These four properties together are what distinguish a knowledge graph from a labeled graph, a property graph, a document store, or a well-structured relational database. Any of the four can be relaxed for pragmatic reasons -- and sometimes they should be -- but relaxing them has costs that are worth understanding before you do it.
+#### Nodes represent entities
+
+Discrete, identifiable things: people, places, substances, concepts, events. Not properties, not values, not free-floating text. Things that can be named, referenced, and recognized across sources -- and that's the critical word: *recognized*. When two papers mention the same gene, the same drug, the same disease, a knowledge graph can know they're talking about the same thing. That's what makes cross-source reasoning possible at all. Without it, you're not combining knowledge from multiple sources -- you're just accumulating text. Entities can be identified by their place in familiar, accepted authoritative ontologies.
+
+#### Edges represent typed relationships
+
+Not generic connections but semantically defined predicates with a direction and a meaning. An edge labeled "inhibits" between a drug and an enzyme is a different kind of claim from one labeled "co-occurs with," and the distinction is not cosmetic.
+
+#### Every entity has a canonical identity
+
+A stable identifier that persists across documents, authors, and time. The same gene is the same node whether a paper calls it by its official symbol, a common alias, or a misspelling. Resolving that multiplicity to a single identity is not bookkeeping; it's what makes the graph useful.
+
+#### Every relationship carries provenance
+
+A traceable record of where the claim came from, by what method it was established, and with what confidence. A relationship without provenance is an assertion of unknown quality. A relationship with provenance is evidence.
 
 ### Nodes, Edges, and What They Mean
 
@@ -229,7 +274,7 @@ Honest accounting: KGs reflect the quality and coverage of their sources. They r
 
 ---
 
-## Chapter 5: Representation Is Reasoning
+## Chapter 4: Representation Is Reasoning
 
 ### From fluency to grounded reasoning
 
@@ -265,7 +310,7 @@ The argument comes full circle. Representation matters. Explicit representation 
 
 ---
 
-## Chapter 6: The Extraction Problem
+## Chapter 5: The Extraction Problem
 
 ### Text is subtler (and humans are smarter) than you would think
 
@@ -317,7 +362,7 @@ None of this is magic, and it's worth being precise about what it isn't.
 
 Hallucination (Chapter 1) takes a specific form in extraction: the model can invent entity names that don't appear in the source, fabricate relationships the text doesn't assert, and misattribute provenance. Validation is not optional.
 
-Context window limits matter for scientific literature, where a paper is often tens of thousands of words and the relationships that matter may span sections written pages apart. The chunking strategies in Chapter 10 are a response to this reality. They work, but they introduce their own complications: a relationship that spans a chunk boundary may be missed, and the context available to the model for any given extraction is always less than the full paper.
+Context window limits matter for scientific literature, where a paper is often tens of thousands of words and the relationships that matter may span sections written pages apart. The chunking strategies in Chapter 9 are a response to this reality. They work, but they introduce their own complications: a relationship that spans a chunk boundary may be missed, and the context available to the model for any given extraction is always less than the full paper.
 
 Cost at serious scale is real. Extracting a comprehensive knowledge graph from a large corpus -- hundreds of thousands of papers -- requires a large number of API calls, and API calls are not free. The economics are better than classical NLP at the research prototype scale and require more careful management at production scale.
 
@@ -329,7 +374,7 @@ This chapter ends honestly because the rest of the book is the engineering respo
 
 # Part II: LLMs Change the Equation
 
-## Chapter 7: Why LLMs Make This Practical Now
+## Chapter 6: LLMs Make This Practical Now
 
 ### The Economics Argument First
 
@@ -349,7 +394,7 @@ Hedging and negation ("did not inhibit"), implicit relationships ("patients rece
 
 ### The Remaining Limitations, Honestly
 
-Don't rehash Chapter 1 or the detailed treatment in Chapter 6. List the limitations (hallucination in extraction, context window, cost, non-determinism) and point forward: the rest of the book is the engineering response.
+Don't rehash Chapter 1 or the detailed treatment in Chapter 5. List the limitations (hallucination in extraction, context window, cost, non-determinism) and point forward: the rest of the book is the engineering response.
 
 ### Why This Moment
 
@@ -357,7 +402,7 @@ A brief look at what changed between 2020 and now: model capability, API accessi
 
 ---
 
-## Chapter 8: The Free KG Cases
+## Chapter 7: The Free KG Cases
 
 ### When You Don't Need Extraction
 
@@ -385,7 +430,7 @@ Most real KGs combine extraction with structured sources: link your extracted en
 
 ---
 
-## Chapter 9: Designing Your Schema
+## Chapter 8: Designing Your Schema
 
 ### Schema Design as Intellectual Work
 
@@ -405,7 +450,7 @@ When entity types should form a hierarchy and when flat is better. The temptatio
 
 ### Provenance as a First-Class Schema Concern
 
-Revisiting the provenance argument from Chapter 4, now in a design context. How you represent where a fact came from isn't an afterthought -- it should be part of the schema from the start. The fields you'll regret not having later.
+Revisiting the provenance argument from Chapter 3, now in a design context. How you represent where a fact came from isn't an afterthought -- it should be part of the schema from the start. The fields you'll regret not having later.
 
 ### Designing for Extraction
 
@@ -421,9 +466,9 @@ Your schema will change. New entity types you didn't anticipate, relationship ty
 
 The next three chapters examine issues that arose while working on my own software implementation of a knowledge graph system. The level of detail goes into the realm of engineering decisions. For non-engineers, the material here may feel a bit dense.
 
-If you don't have to make engineering decisions yourself, you may wish to skim these chapters, or perhaps skip them entirely, and pick up again at chapter 13, "What Your Graph Can Do". Even if you skim, the chapter introductions sketch the main tradeoffs — which is enough to have an informed conversation with an engineer or a consultant about what you're building.
+If you don't have to make engineering decisions yourself, you may wish to skim these chapters, or perhaps skip them entirely, and pick up again at chapter 12, "What Your Graph Can Do". Even if you skim, the chapter introductions sketch the main tradeoffs — which is enough to have an informed conversation with an engineer or a consultant about what you're building.
 
-## Chapter 10: The Ingestion Pipeline
+## Chapter 9: The Ingestion Pipeline
 
 ### The Pipeline as a Pattern, Not a Recipe
 
@@ -459,7 +504,7 @@ Large ingestion runs fail partway through. Design for restartability from the be
 
 ---
 
-## Chapter 11: Identity and Canonicalization
+## Chapter 10: Identity and Canonicalization
 
 ### Identity Is Load-Bearing
 
@@ -491,13 +536,13 @@ Whatever your lookup strategy, cache aggressively. Repeated lookups for the same
 
 ---
 
-## Chapter 12: Provenance and Trust
-
-*General argument: provenance is domain-dependent but when it matters it matters architecturally, not as an add-on. Evidence, not instruction.*
+## Chapter 11: Provenance and Trust
 
 ### Domain-Dependent Honesty
 
 Provenance is not equally important in every domain. In medicine, the difference between "this drug inhibits this enzyme, from a single case report" and "this drug inhibits this enzyme, replicated across forty randomized controlled trials" is the difference between a hypothesis and a clinical fact. In theater arts, you may not care nearly as much where a relationship came from -- the graph is useful even if you can't trace every edge to a source. Be honest with yourself about how much provenance infrastructure your domain actually requires before you build it.
+
+When it does matter, provenance matters at an architectural level, not as an add-on. If it's important for your domain, you will want to think about it carefully.
 
 ### What Provenance Buys You
 
@@ -519,7 +564,7 @@ The point of capturing provenance is being able to use it. A graph server that c
 
 # Part IV: What It Makes Possible
 
-## Chapter 13: What Your Graph Can Do
+## Chapter 12: What Your Graph Can Do
 
 *General argument: the value of the graph is in what grounded reasoning becomes possible, not in the serving layer. Evidence, not instruction.*
 
@@ -545,7 +590,7 @@ The Model Context Protocol is worth understanding as an architectural pattern, n
 
 ### Hypothesis Generation
 
-The capability that arguably justifies building the graph in the first place, and the one that most clearly connects back to Chapter 3's Robot Scientist. Graph traversal as a discovery tool: not "what do we know about X" but "what's adjacent to X that hasn't been studied," "what entities are structurally similar to X in the graph," "what relationships exist between X and Y that no single paper asserts but that follow from combining multiple sources." These are queries that are impossible over raw text and natural over a well-constructed graph.
+The capability that arguably justifies building the graph in the first place, and the one that most clearly connects back to Chapter 2's Robot Scientist. Graph traversal as a discovery tool: not "what do we know about X" but "what's adjacent to X that hasn't been studied," "what entities are structurally similar to X in the graph," "what relationships exist between X and Y that no single paper asserts but that follow from combining multiple sources." These are queries that are impossible over raw text and natural over a well-constructed graph.
 
 ### Should Hypothesis Generation Be Baked In?
 
@@ -553,11 +598,11 @@ A question worth sitting with rather than answering too quickly. There's an argu
 
 ### Returning to the Dream
 
-A brief callback to Part I. Chapter 3 described the vision; Chapter 5 argued that representation is the prerequisite for principled reasoning; the rest of Part III has been the engineering. A functioning knowledge graph with a serving layer and LLM integration is not the Robot Scientist -- but it's the closest thing currently buildable. The gap between what you've just learned to construct and what Adam and Eve demonstrated is narrower than it looks.
+A brief callback to Part I. Chapter 2 described the vision; Chapter 4 argued that representation is the prerequisite for principled reasoning; the rest of Part III has been the engineering. A functioning knowledge graph with a serving layer and LLM integration is not the Robot Scientist -- but it's the closest thing currently buildable. The gap between what you've just learned to construct and what Adam and Eve demonstrated is narrower than it looks.
 
 ---
 
-## Chapter 14: The Augmented Researcher
+## Chapter 13: The Augmented Researcher
 
 ### What Machines Would See That We Can't
 
@@ -577,7 +622,7 @@ Coming back to Adam and Eve now that the reader understands the extraction and g
 
 ---
 
-## Chapter 15: Who Benefits, Who Decides
+## Chapter 14: Who Benefits, Who Decides
 
 ### Democratization and Its Limits
 
@@ -601,13 +646,13 @@ Open versus proprietary. The tension between the scientific commons and commerci
 
 ---
 
-## Chapter 16: The Inference You Didn't Intend
+## Chapter 15: The Inference You Didn't Intend
 
 *If the knowledge graph captures something essential to human expert understanding -- the deep structure of how a domain is organized -- then a system that reasons over it has access to the **architecture of expertise**, not just facts. The epistemic responsibility argument in this chapter should reflect that.*
 
 ### Returning to HAL
 
-The lip-reading observation from Chapter 3, now with full context. A system capable enough to do what this book describes is capable enough to surface inferences its builders didn't anticipate and didn't design for. This isn't a flaw -- it's the point. But it deserves to be taken seriously.
+The lip-reading observation from Chapter 2, now with full context. A system capable enough to do what this book describes is capable enough to surface inferences its builders didn't anticipate and didn't design for. This isn't a flaw -- it's the point. But it deserves to be taken seriously.
 
 ### Dual Use at Graph Scale
 
@@ -623,7 +668,7 @@ What you owe to users of the system you build. Not a counsel of paralysis -- the
 
 ---
 
-## Chapter 17: What's Next
+## Chapter 16: What's Next
 
 ### Open Problems
 
