@@ -198,9 +198,9 @@ This is already happening, in a limited way, at the level of encyclopedic knowle
 
 ### The Gap Is the Book
 
-Adam existed. The cross-disciplinary machine is not a fantasy — it's an engineering problem with a visible shape. The destination is real.
+Adam existed. The cross-disciplinary machine is not a fantasy -- it's an engineering problem with a visible shape. The destination is real.
 
-What stands between here and there is the same wall that stopped every previous attempt: getting knowledge in. Adam worked because its domain was narrow enough, and structured enough, that the knowledge could be loaded by hand. Extending that to the full body of published science — millions of papers, across every discipline, in every language, updated continuously as new results arrive — requires something Adam didn't have: a way to read the literature and extract structured, typed, provenance-tracked knowledge from it automatically, reliably, and at scale.
+What stands between here and there is the same wall that stopped every previous attempt: getting knowledge in. Adam worked because its domain was narrow enough, and structured enough, that the knowledge could be loaded by hand. Extending that to the full body of published science -- millions of papers, across every discipline, in every language, updated continuously as new results arrive -- requires something Adam didn't have: a way to read the literature and extract structured, typed, provenance-tracked knowledge from it automatically, reliably, and at scale.
 
 That is the missing piece. It is also, as of a few years ago, newly within reach. The rest of this book is about how to build it.
 
@@ -395,31 +395,121 @@ This chapter ends honestly because the rest of the book is the engineering respo
 
 # Part II: LLMs Change the Equation
 
-## Chapter 6: LLMs Make This Practical Now
+# Chapter 6: LLMs Make This Practical Now
 
-### The Economics Argument First
+The first five chapters of this book made two kinds of arguments. One was conceptual.
 
-Before capability, cost. The reason classical NLP pipelines didn't democratize KG construction wasn't purely technical -- it was that adapting them to a new domain required a research project. LLMs shift the marginal cost of a new extraction task from months to hours. That's not an improvement in degree, it's a change in what's possible for whom.
+* Knowledge graphs are necessary for reliable machine reasoning, not just convenient.
+* Explicit representation is epistemologically superior to implicit representation in any domain where the reasoning has to be auditable.
+* The structure of expert knowledge is relational, and a graph is the natural data structure for capturing it.
 
-### What LLMs Actually Are (For Our Purposes)
+The other argument was historical.
 
-Brief forward reference to Chapter 1: when a model extracts, it's not magic or understanding in the human sense, but it's sufficient for the task. Here, focus on what matters for extraction -- the prompt as schema binding, what the model can handle that classical systems couldn't, and what remains limiting.
+* People have been trying to build these things for decades.
+* The conceptual case was understood early.
+* The work kept stalling at the same bottleneck.
 
-### The Prompt as Schema Binding
+Getting knowledge *in* -- turning unstructured text into structured, typed, provenance-tracked graph data at scale -- was the hard part, and it stayed hard for a long time. This chapter is about why it stopped being hard.
 
-The key insight that makes LLM-based extraction different: you can describe your schema in natural language and the model will attempt to extract against it. This sounds obvious but its implications are large. Schema changes don't require retraining. Ambiguous cases can be handled with instructions rather than labeled examples. A domain expert who can't write code can participate in schema design in a meaningful way.
+The answer is large language models, but the reason they matter for this problem is not primarily about capability. It's about economics. The capability is real and we'll get to it. But capability arguments for AI systems tend to slide into hype, and the hype obscures what actually changed. What actually changed is that the cost structure of knowledge graph construction from unstructured text underwent a phase transition -- from "research project" to "afternoon of prompt engineering" -- and that change in cost is what changed who can build these things and what they can be built for.
 
-### Handling What Classical Systems Couldn't
+## The Economics Argument First
 
-Hedging and negation ("did not inhibit"), implicit relationships ("patients receiving drug X showed improvement" implies a treatment relationship), cross-sentence dependencies, domain jargon without explicit definition. Concrete examples from the medlit domain of sentences that would have broken a classical pipeline and how a prompted LLM handles them.
+Before we talk about what LLMs can do, let's talk about what classical NLP couldn't afford to do.
 
-### The Remaining Limitations, Honestly
+Chapter 5 walked through the classical extraction pipeline and its limitations. The technical limitations were real, but they weren't the main barrier. The main barrier was the economics of domain adaptation. If you wanted to extract knowledge from biomedical literature, you needed an extraction system tuned to biomedical literature: trained on annotated biomedical data, evaluated against biomedical benchmarks, maintained as the schema evolved and the literature changed. If you then wanted to do the same for legal documents, you were starting over. Different vocabulary, different sentence structures, different implicit conventions about how claims are stated. A new training dataset. A new annotation effort. New domain experts, recruited, trained, and calibrated. A new deployment pipeline.
 
-Don't rehash Chapter 1 or the detailed treatment in Chapter 5. List the limitations (hallucination in extraction, context window, cost, non-determinism) and point forward: the rest of the book is the engineering response.
+This wasn't a failure of the technology. It was the technology working as designed. Supervised machine learning systems are trained on distributions, and they work on those distributions. Adapting them to new distributions is a research problem. For well-resourced organizations with stable, high-value domains -- pharmaceutical companies mining drug interaction literature, financial institutions processing regulatory filings -- the investment made sense. The organizations that couldn't make that investment simply didn't build knowledge graphs from their unstructured text, because the alternative was too expensive.
 
-### Why This Moment
+The practical consequence was that knowledge graph construction from literature was a capability concentrated in a small number of well-resourced actors. Everyone else either used the knowledge graphs those actors made available, or went without.
 
-A brief look at what changed between 2020 and now: model capability, API accessibility, cost curves, the ecosystem of tooling. The argument that we're in a window where this is newly practical but not yet crowded -- which is when it's worth building.
+What changes with large language models is the marginal cost of a new extraction task.
+
+Not zero -- there's no free lunch, and we'll catalog the costs honestly in a moment. But the order of magnitude shifts dramatically. A classical NLP system adapted to a new domain required months of work from a team with specialized skills. An LLM-based extraction pipeline for a new domain requires a prompt that describes what you're looking for. A good prompt takes thought, iteration, and domain knowledge; we'll spend Chapter 10 on how to write one. The cycle from "I want to extract this kind of relationship" to "I have a working extractor" is measured in hours or days, not months. Schema changes don't require retraining. A domain expert who can't write code can look at a prompt, understand what it's asking for, and suggest improvements. The feedback loop between schema design and extraction quality -- always important, almost always expensive to close in classical systems -- becomes something you can iterate through in an afternoon.
+
+This is a phase transition, not an incremental improvement. When the cost of a capability drops by two orders of magnitude, the population of people and organizations who can use it changes qualitatively. Knowledge graph construction from unstructured text is no longer a capability reserved for organizations with research teams and annotation budgets. It's available to anyone with a corpus, a clear schema, and the patience to iterate.
+
+That matters for who builds knowledge graphs, what domains get covered, and ultimately what gets done with them. The broader implications are in Part IV. For now, the point is narrower: the barrier that kept this technology concentrated in a few hands has lowered. The rest of this chapter is about why the lowering is real and durable, and where the remaining barriers are.
+
+## What LLMs Actually Are, For This Purpose
+
+Chapter 1 established what LLMs are not: not databases, not reasoning systems, not reliable reporters of ground truth. They are pattern-completion engines trained on large text corpora, and their outputs are statistically plausible continuations of their inputs, not verified facts. This is the source of hallucination, and hallucination does not go away in the extraction context -- it takes a specific form there that we'll address directly.
+
+What LLMs *are*, for the purposes of extraction, is something more specific and more useful than "a neural network trained on text."
+
+A large language model has, in its training distribution, an enormous amount of human text that includes natural language descriptions of relationships between things: what drugs treat, what genes encode, what historical events caused other historical events, what legal provisions imply, what symptoms suggest. The model has learned, in a diffuse statistical sense, what it means for these relationships to hold -- not as explicit logical rules, but as patterns of co-occurrence, context, and usage that are deeply embedded in the model's weights.
+
+When you write a prompt that says "extract all 'treats' relationships between drugs and diseases from the following text, where 'treats' means a drug is used therapeutically to address a disease," you are not teaching the model what "treats" means. You are binding the model's existing, diffuse understanding of that concept to your schema. The model already has a representation of the difference between "ibuprofen treats headache" and "ibuprofen does not treat bacterial infection." Your prompt tells it that this particular distinction, expressed in terms of your schema's relationship type, is what you want surfaced.
+
+This is what the outline calls "the prompt as schema binding," and it's the conceptual key to why LLM-based extraction works differently from classical systems. You're not training a model to recognize patterns. You're directing a model that already has deep, broad pattern knowledge to apply that knowledge to your specific representational task. The schema description in your prompt is a set of instructions to a very knowledgeable reader, not a specification for a statistical classifier.
+
+The implications of this are large, and we'll work through them in the next section. For now, the key point is that "LLMs understand language" -- a claim that deserves skepticism in many contexts -- is, for the specific task of extraction, a practically useful approximation. The model doesn't need to understand language in the philosophical sense. It needs to be able to identify, in a passage of text, whether a relationship of a given semantic type holds between two given entities. It can do this because it has learned, from an enormous amount of human language use, what those relationships look like when they're present and when they're absent. That's enough.
+
+## The Prompt as Schema Binding
+
+The central practical difference between classical NLP extraction and LLM-based extraction is this: in classical systems, the schema is baked into the model architecture and the training data. In LLM-based systems, the schema is in the prompt.
+
+This sounds like an implementation detail. It isn't.
+
+When the schema is baked into the model, changing the schema means changing the model. New entity types require new training data and new training runs. Renamed relationship types confuse a model trained with the old names. Distinctions that turned out to matter -- the difference between "directly inhibits" and "allosterically inhibits," say, if that distinction turns out to be clinically significant for your application -- require new annotations and new training. The schema is frozen at training time, and thawing it is expensive.
+
+When the schema is in the prompt, changing the schema means changing the prompt. You add a new entity type by describing it. You clarify a relationship type by adding a sentence that explains the distinction. You can make these changes and run an extraction batch within the hour to see how the change affects output quality. Schema evolution, which any serious knowledge graph project will go through, stops being a recurring research project and becomes a routine iteration loop.
+
+The other consequence is that schema design becomes a collaborative, legible activity. A classical NLP pipeline encodes schema decisions in training data and model weights that domain experts can't directly inspect or critique. A prompt encodes schema decisions in natural language that anyone who can read can evaluate. A cardiologist reviewing a proposed schema for a cardiovascular knowledge graph can read a well-written extraction prompt, notice that the distinction between "increases risk of" and "causes" is not being drawn, and say so. She doesn't need to understand machine learning. She needs to understand her domain, and she does.
+
+This changes the knowledge engineering relationship in a way that the classical systems never managed. The expert systems of the 1980s aspired to this: the vision was always that domain experts would be able to inspect and correct the knowledge base. The execution required knowledge engineers as intermediaries, because the representation languages were not natural language. LLM-based extraction achieves, in the extraction domain, what the knowledge engineers were supposed to achieve in the representation domain: it removes the translation layer between what domain experts know and what the system can use.
+
+There are limits. Prompts that ask for overly subtle distinctions -- semantic differences that would challenge even a careful human reader -- produce inconsistent output. Prompts that are ambiguous produce ambiguous extractions. The quality of the schema description in the prompt directly determines the quality of the extraction output, and "write a good schema description" is harder than it sounds; the whole of Chapter 10 is devoted to it. The point is not that prompts are easy to write, but that the feedback loop between "what I described" and "what I got" is short enough to be useful.
+
+## Handling What Classical Systems Couldn't
+
+Let's be concrete about the specific failure modes of classical NLP extraction that LLMs handle well, because "LLMs are better at language" is too vague to be useful.
+
+**Hedging and negation.** The sentence "drug X did not inhibit pathway Y in this model" contains an "inhibits" relationship that is negated. A classical relation extraction system trained to recognize inhibition relationships would frequently fire on this sentence anyway, because "did not inhibit" and "inhibits" look statistically similar. The word "not" is short and common enough to be underweighted in most feature representations. A large language model, prompted to extract inhibition relationships and to exclude negated ones, handles this correctly in the vast majority of cases. The model has learned from an enormous amount of text that negation changes meaning, and it applies that knowledge. This is not a small improvement: negated relationships are common in scientific literature, and a graph that includes them as positive edges is systematically wrong in ways that are hard to detect.
+
+**Hedged claims.** Related but distinct. "Drug X may inhibit pathway Y" and "drug X inhibits pathway Y" are different claims with different epistemic weights. Classical systems often collapsed these into the same extraction, losing the hedge. A prompted LLM can be instructed to track hedging as part of the provenance record -- to note whether a claim is stated as fact, hypothesis, or speculation -- and it will do so with reasonable consistency. This is directly relevant to provenance design, which Chapter 8 covers.
+
+**Implicit relationships.** Some relationships are never stated directly in the text but are clear to a knowledgeable reader. "Patients receiving drug X showed a 40% reduction in tumor burden compared to controls" does not contain the word "treats." It asserts, in the language of clinical reporting, that drug X has therapeutic activity against the relevant tumor type. A classical system without an explicit "treats" pattern for this construction would miss it. A large language model, prompted to extract treatment relationships and given a description of what counts as evidence for one, will recognize this as an instance of the pattern. This matters a great deal in biomedical literature, where direct assertions are often replaced by results-focused constructions that any domain expert reads as making a relational claim.
+
+**Cross-sentence dependencies.** "The compound was tested against a panel of cancer cell lines. It showed selective activity against BRCA1-mutant cells, with IC50 values in the nanomolar range." These two sentences together assert a relationship -- the compound has activity against a specific molecular subtype of cancer -- that doesn't fully exist in either sentence alone. Classical architectures with limited context windows would process each sentence independently and might miss the connection. A large language model operating over both sentences simultaneously -- or, in the chunking strategies we'll cover in Chapter 9, over a passage that includes both -- will recognize the implicit antecedent and extract the relationship correctly.
+
+**Domain jargon.** A drug referred to by a trial identifier, a gene referred to by a lab-specific shorthand, a syndrome referred to by the name of its first describer -- these appear constantly in specialist literature and were frequently invisible to classical systems trained on corpora where the standard terminology dominated. LLMs trained on broad scientific text have seen a much wider range of how concepts are referred to, and they tolerate terminological variation better. This isn't complete -- genuinely novel terminology, or highly specialized jargon outside the training distribution, can still cause failures -- but the robustness is substantially better.
+
+None of these improvements mean that LLM extraction is reliable without engineering. They mean that the specific failure modes that made classical extraction brittle in complex domains are substantially mitigated. The failure modes that remain are different in character, and the engineering response to them is different.
+
+## The Remaining Limitations, Honestly
+
+Chapter 1 established hallucination as a structural feature of LLMs, not a bug. Chapter 5 was honest about what classical NLP couldn't do. This chapter should be equally honest about what LLMs can't do, because the engineering in Part III is largely a response to these limitations.
+
+**Hallucination in extraction.** The model can invent entity names that don't appear in the source text. It can assert relationships that the text implies but doesn't actually support. It can misattribute provenance, assigning a claim to a passage that doesn't contain it. These are not rare edge cases -- they occur with meaningful frequency even in well-prompted models, and the frequency increases as the task gets harder (more complex sentences, more ambiguous relationships, longer passages). Validation against the source is not optional. Chapter 11 covers the validation pipeline.
+
+**Context window limits.** Scientific papers are often tens of thousands of words. The relationships that matter may span sections written pages apart -- an introduction that defines a hypothesis, a methods section that describes a test, a results section that reports an outcome. The model's context window is finite, and even the largest current context windows don't fully solve this problem; performance tends to degrade on information that appears far from the relevant extraction target within a long context. The chunking strategies in Chapter 9 are a pragmatic response: break documents into manageable passages, extract relationships within each, and handle cross-chunk dependencies with a separate pass. This works, but it introduces its own complications, including relationships that span chunk boundaries and may be missed.
+
+**Cost at scale.** A single extraction call against a single paper costs a small amount. Across a corpus of hundreds of thousands of papers, the cost accumulates. The economics are better than classical NLP at the prototype scale -- dramatically so -- and require more careful management at production scale. Caching, batching, and tiered extraction (do cheap passes first, expensive passes only where needed) are all part of managing this.
+
+**Non-determinism.** The same prompt, run twice against the same text, may produce different output. This matters for reproducibility: if your pipeline produces different graphs on different runs, it's difficult to debug, compare, and maintain. Caching extraction results addresses this directly and is both an efficiency measure and a reproducibility measure.
+
+**What the model knows and doesn't know.** LLM extraction is anchored in the model's training distribution. Very recent developments, highly specialized terminology that appears rarely in broad scientific text, and concepts that are standard in one community but not in the general scientific literature can all cause degraded performance. In practice, this means that extraction quality should be evaluated on your specific domain and corpus, not assumed from general benchmarks.
+
+The point of this honest accounting is not to undercut the argument that LLMs make knowledge graph construction newly practical. They do. The point is that "newly practical" means "practical if you engineer it carefully," not "practical if you just call the API." Part III is the careful engineering.
+
+## Why This Moment
+
+One more question deserves an answer before we get into the engineering: why now? The transformer architecture was introduced in 2017. GPT-2 was released in 2019. Why is this moment -- roughly 2023 through the present -- the right time to build?
+
+The answer is the convergence of three things that had to arrive together.
+
+The first is model capability. The capability of general-purpose language models for complex semantic understanding crossed a threshold somewhere around the GPT-4 generation. Before that threshold, prompted extraction was possible but brittle on complex constructions; after it, the failures became manageable with good engineering. Earlier models were impressive but required more hand-holding. Current models handle the hard cases -- hedging, negation, implicit relationships, cross-sentence dependencies -- with the consistency needed for production pipelines.
+
+The second is API accessibility. Using a capable language model for extraction before the current generation of public APIs meant running your own infrastructure, which meant GPU clusters, model serving, and the full operational stack. This was possible for large organizations; it wasn't feasible for a researcher, a small company, or an individual practitioner. The existence of stable, affordable, well-documented APIs for capable models changes who can build this. You don't need infrastructure. You need an API key and a credit card.
+
+The third is the tooling ecosystem. The infrastructure for building knowledge graph pipelines -- graph databases with native support for the relevant query patterns, vector databases for embedding-based retrieval, orchestration frameworks for multi-step LLM pipelines -- arrived, matured, and became accessible at roughly the same time as the models. A knowledge graph pipeline in 2020 would have required assembling a stack of immature tools and writing substantial infrastructure code. Today the stack exists and the components are well-documented.
+
+These three things had to be true simultaneously, and they are now. That matters for the argument this book is making. This is not a forecast that something will soon be possible. This is a description of what is possible today, and the rest of the book is how to do it.
+
+There is also a fourth consideration that is more speculative but worth naming. We are at an early moment in the adoption of this capability. The knowledge graphs that will have the largest impact on medicine, law, materials science, and other complex domains don't exist yet. The tooling is new enough that best practices are still being established. The organizations that will benefit most from these systems are still figuring out that this is possible. The researchers who will do the most interesting work with these systems haven't started yet.
+
+Early maps of large territories are valuable precisely because they're early. What follows in this book is one such map, drawn from working code and real corpora. It's not complete. It's not the last word. But the territory is real, the tools are here, and the problems are interesting.
 
 ---
 
@@ -487,7 +577,7 @@ Your schema will change. New entity types you didn't anticipate, relationship ty
 
 The next three chapters examine issues that arose while working on my own software implementation of a knowledge graph system. The level of detail goes into the realm of engineering decisions. For non-engineers, the material here may feel a bit dense.
 
-If you don't have to make engineering decisions yourself, you may wish to skim these chapters, or perhaps skip them entirely, and pick up again at chapter 12, "What Your Graph Can Do". Even if you skim, the chapter introductions sketch the main tradeoffs — which is enough to have an informed conversation with an engineer or a consultant about what you're building.
+If you don't have to make engineering decisions yourself, you may wish to skim these chapters, or perhaps skip them entirely, and pick up again at chapter 12, "What Your Graph Can Do". Even if you skim, the chapter introductions sketch the main tradeoffs -- which is enough to have an informed conversation with an engineer or a consultant about what you're building.
 
 ## Chapter 9: The Ingestion Pipeline
 
