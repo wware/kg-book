@@ -4,10 +4,9 @@ author: Will Ware
 rights: © 2026 Will Ware, MIT License
 language: en-US
 description: "A practitioner's guide to building knowledge graphs from unstructured text using LLMs."
-cover-image: CoverImage.png
 ...
 
-# Preface
+## Preface
 
 This is a book written in the age of Large Language Models, but the central thesis of this book is about machine reasoning in general, now and in the future. Knowledge graphs predate LLMs and will outlast them, because they capture something essential to how humans understand and reason about complex fields in an explicit, structured form that can be shared and curated. A machine cannot reason reliably about such fields without knowledge encoded in some form of graph. The software projects described here are demonstrations of this thesis, not the subject of it. LLMs are enablers for the creation of knowledge graphs, which were much discussed in the past but only practical at scale now.
 
@@ -20,11 +19,11 @@ The gist of this book (beyond providing a lot of how-to information) is that a k
 - a necessity, not just a convenience, for reliable machine reasoning
 - an explicit representation of how human experts understand difficult topics
 
----
-
 # Part I: The Landscape
 
 ## Chapter 1: Why do we want to build Knowledge Graphs?
+
+`\chaptermark{Why build Knowledge Graphs?}`{=latex}
 
 ### Large Language Models Work Great
 
@@ -63,6 +62,8 @@ A knowledge graph built from your domain gives the model something to reason *fr
 Knowledge graphs provide a unique return on investment. They are simple data structures, easy to understand, not too difficult to build with the tools we have now, and easy for an LLM to query. They reflect the shape of human knowledge with surprising accuracy when the extraction is done well. The rest of this book is about when you want one, how to design it, and how to build it from the unstructured text where most of that knowledge still lives.
 
 ## Chapter 2: A Brief History of Knowledge Representation
+
+`\chaptermark{Knowledge Representation History}`{=latex}
 
 ### The Idea That Wouldn't Die
 
@@ -204,29 +205,21 @@ What stands between here and there is the same wall that stopped every previous 
 
 That is the missing piece. It is also, as of a few years ago, newly within reach. The rest of this book is about how to build it.
 
----
-
 ## Chapter 3: What Is a Knowledge Graph, Really?
+
+`\chaptermark{What Is a Knowledge Graph?}`{=latex}
 
 ### A working definition in four parts
 
 These four properties together distinguish a knowledge graph from a labeled graph, a property graph, a document store, or a well-structured relational database. Any of the four can be relaxed for pragmatic reasons -- and sometimes they should be -- but relaxing them has costs that are worth understanding before you do it.
 
-#### Nodes represent entities
+**Nodes represent entities.** Discrete, identifiable things: people, places, substances, concepts, events. Not properties, not values, not free-floating text. Things that can be named, referenced, and recognized across sources -- and that's the critical word: *recognized*. When two papers mention the same gene, the same drug, the same disease, a knowledge graph can know they're talking about the same thing. That's what makes cross-source reasoning possible at all. Without it, you're not combining knowledge from multiple sources -- you're just accumulating text. Entities can be identified by their place in familiar, accepted authoritative ontologies.
 
-Discrete, identifiable things: people, places, substances, concepts, events. Not properties, not values, not free-floating text. Things that can be named, referenced, and recognized across sources -- and that's the critical word: *recognized*. When two papers mention the same gene, the same drug, the same disease, a knowledge graph can know they're talking about the same thing. That's what makes cross-source reasoning possible at all. Without it, you're not combining knowledge from multiple sources -- you're just accumulating text. Entities can be identified by their place in familiar, accepted authoritative ontologies.
+**Edges represent typed relationships.** Not generic connections but semantically defined predicates with a direction and a meaning. An edge labeled "inhibits" between a drug and an enzyme is a different kind of claim from one labeled "co-occurs with," and the distinction is not cosmetic.
 
-#### Edges represent typed relationships
+**Every entity has a canonical identity.** A stable identifier that persists across documents, authors, and time. The same gene is the same node whether a paper calls it by its official symbol, a common alias, or a misspelling. Resolving that multiplicity to a single identity is not bookkeeping; it's what makes the graph useful.
 
-Not generic connections but semantically defined predicates with a direction and a meaning. An edge labeled "inhibits" between a drug and an enzyme is a different kind of claim from one labeled "co-occurs with," and the distinction is not cosmetic.
-
-#### Every entity has a canonical identity
-
-A stable identifier that persists across documents, authors, and time. The same gene is the same node whether a paper calls it by its official symbol, a common alias, or a misspelling. Resolving that multiplicity to a single identity is not bookkeeping; it's what makes the graph useful.
-
-#### Every relationship carries provenance
-
-A traceable record of where the claim came from, by what method it was established, and with what confidence. A relationship without provenance is an assertion of unknown quality. A relationship with provenance is evidence.
+**Every relationship carries provenance.** A traceable record of where the claim came from, by what method it was established, and with what confidence. A relationship without provenance is an assertion of unknown quality. A relationship with provenance is evidence.
 
 ### Nodes, Edges, and What They Mean
 
@@ -303,9 +296,9 @@ A knowledge graph is a powerful tool for certain kinds of reasoning. It is not a
 
 **Bias encodes at scale.** The literature in many domains reflects historical and structural biases: which diseases get studied, which populations are represented in trials, which research questions receive funding. A graph extracted from that literature inherits those biases. Worse, the graph can amplify them -- a pattern that appears in many papers becomes many edges, which makes it look more established than a pattern that appears in few. A knowledge graph is not neutral. It reflects the priorities and blind spots of its sources, and those need to be understood and, where possible, corrected.
 
----
-
 ## Chapter 4: Representation Is Reasoning
+
+`\chaptermark{Representation Is Reasoning}`{=latex}
 
 ### From fluency to grounded reasoning
 
@@ -339,9 +332,9 @@ The history of knowledge representation in AI is, in one reading, a long argumen
 
 The argument comes full circle. Representation matters. Explicit representation matters more than implicit representation in any domain where the reasoning has to be auditable. Extraction is what makes explicit representation tractable at scale. Language models provide the extraction. The rest of this book is the engineering.
 
----
-
 ## Chapter 5: The Extraction Problem
+
+`\chaptermark{The Extraction Problem}`{=latex}
 
 ### Text is subtler (and humans are smarter) than you would think
 
@@ -401,11 +394,11 @@ And non-determinism -- the fact that the same prompt, run twice against the same
 
 This chapter ends honestly because the rest of the book is the engineering response to these limitations. LLMs are the best tool we have ever had for the extraction problem. That's a strong claim and the evidence for it is in the following chapters. But "best we've ever had" and "good enough to use without careful engineering" are not the same thing, and conflating them leads to pipelines that work in demos and break on real corpora.
 
----
-
 # Part II: LLMs Change the Equation
 
-# Chapter 6: LLMs Make This Practical Now
+## Chapter 6: LLMs Make This Practical Now
+
+`\chaptermark{LLMs Make This Practical Now}`{=latex}
 
 The first five chapters of this book made two kinds of arguments. One was conceptual.
 
@@ -423,7 +416,7 @@ Getting knowledge *in* -- turning unstructured text into structured, typed, prov
 
 The answer is large language models, but the reason they matter for this problem is not primarily about capability. It's about economics. The capability is real and we'll get to it. But capability arguments for AI systems tend to slide into hype, and the hype obscures what actually changed. What actually changed is that the cost structure of knowledge graph construction from unstructured text underwent a phase transition -- from "research project" to "afternoon of prompt engineering" -- and that change in cost is what changed who can build these things and what they can be built for.
 
-## The Economics Argument First
+### The Economics Argument First
 
 Before we talk about what LLMs can do, let's talk about what classical NLP couldn't afford to do.
 
@@ -441,7 +434,7 @@ This is a phase transition, not an incremental improvement. When the cost of a c
 
 That matters for who builds knowledge graphs, what domains get covered, and ultimately what gets done with them. The broader implications are in Part IV. For now, the point is narrower: the barrier that kept this technology concentrated in a few hands has lowered. The rest of this chapter is about why the lowering is real and durable, and where the remaining barriers are.
 
-## What LLMs Actually Are, For This Purpose
+### What LLMs Actually Are, For This Purpose
 
 Chapter 1 established what LLMs are not: not databases, not reasoning systems, not reliable reporters of ground truth. They are pattern-completion engines trained on large text corpora, and their outputs are statistically plausible continuations of their inputs, not verified facts. This is the source of hallucination, and hallucination does not go away in the extraction context -- it takes a specific form there that we'll address directly.
 
@@ -455,7 +448,7 @@ This is what the outline calls "the prompt as schema binding," and it's the conc
 
 The implications of this are large, and we'll work through them in the next section. For now, the key point is that "LLMs understand language" -- a claim that deserves skepticism in many contexts -- is, for the specific task of extraction, a practically useful approximation. The model doesn't need to understand language in the philosophical sense. It needs to be able to identify, in a passage of text, whether a relationship of a given semantic type holds between two given entities. It can do this because it has learned, from an enormous amount of human language use, what those relationships look like when they're present and when they're absent. That's enough.
 
-## The Prompt as Schema Binding
+### The Prompt as Schema Binding
 
 The central practical difference between classical NLP extraction and LLM-based extraction is this: in classical systems, the schema is baked into the model architecture and the training data. In LLM-based systems, the schema is in the prompt.
 
@@ -471,7 +464,7 @@ This changes the knowledge engineering relationship in a way that the classical 
 
 There are limits. Prompts that ask for overly subtle distinctions -- semantic differences that would challenge even a careful human reader -- produce inconsistent output. Prompts that are ambiguous produce ambiguous extractions. The quality of the schema description in the prompt directly determines the quality of the extraction output, and "write a good schema description" is harder than it sounds; the whole of Chapter 10 is devoted to it. The point is not that prompts are easy to write, but that the feedback loop between "what I described" and "what I got" is short enough to be useful.
 
-## Handling What Classical Systems Couldn't
+### Handling What Classical Systems Couldn't
 
 Let's be concrete about the specific failure modes of classical NLP extraction that LLMs handle well, because "LLMs are better at language" is too vague to be useful.
 
@@ -487,7 +480,7 @@ Let's be concrete about the specific failure modes of classical NLP extraction t
 
 None of these improvements mean that LLM extraction is reliable without engineering. They mean that the specific failure modes that made classical extraction brittle in complex domains are substantially mitigated. The failure modes that remain are different in character, and the engineering response to them is different.
 
-## The Remaining Limitations, Honestly
+### The Remaining Limitations, Honestly
 
 Chapter 1 established hallucination as a structural feature of LLMs, not a bug. Chapter 5 was honest about what classical NLP couldn't do. This chapter should be equally honest about what LLMs can't do, because the engineering in Part III is largely a response to these limitations.
 
@@ -503,7 +496,7 @@ Chapter 1 established hallucination as a structural feature of LLMs, not a bug. 
 
 The point of this honest accounting is not to undercut the argument that LLMs make knowledge graph construction newly practical. They do. The point is that "newly practical" means "practical if you engineer it carefully," not "practical if you just call the API." Part III is the careful engineering.
 
-## Why This Moment
+### Why This Moment
 
 One more question deserves an answer before we get into the engineering: why now? The transformer architecture was introduced in 2017. GPT-2 was released in 2019. Why is this moment -- roughly 2023 through the present -- the right time to build?
 
@@ -521,9 +514,9 @@ There is also a fourth consideration that is more speculative but worth naming. 
 
 Early maps of large territories are valuable precisely because they're early. What follows in this book is one such map, drawn from working code and real corpora. It's not complete. It's not the last word. But the territory is real, the tools are here, and the problems are interesting.
 
----
-
 ## Chapter 7: The Free KG Cases
+
+`\chaptermark{The Free KG Cases}`{=latex}
 
 ### When You Don't Need Extraction
 
@@ -549,9 +542,9 @@ The common thread: structured sources give you high-precision graphs over the kn
 
 Most real KGs combine extraction with structured sources: link your extracted entities to Wikidata, anchor your drug names to a curated drug database, use the Gene Ontology as a backbone for your biomedical graph. The extraction problem doesn't go away but it's better constrained. This is actually what the medlit example does, and it sets up the authority lookup discussion in Part III.
 
----
-
 ## Chapter 8: Designing Your Schema
+
+`\chaptermark{Designing Your Schema}`{=latex}
 
 ### Schema Design as Intellectual Work
 
@@ -581,13 +574,13 @@ Schema choices that make LLM extraction easier versus harder. Relationship types
 
 Your schema will change. New entity types you didn't anticipate, relationship types that turn out to be too coarse, distinctions that turn out to matter more than you thought. How to design in a way that doesn't make schema evolution catastrophic. Versioning, migration, and the argument for keeping the schema as simple as possible for as long as possible.
 
----
-
 # Part III: Building It
 
 The next few chapters describe work done on a particular project. You should regard this as advice, not as a recipe or specification that you must follow, but rather as a checklist of things worth considering. The approaches suggested here might meet your needs, they might not. Thinking about them will help you reason through the details of your own design.
 
 ## Chapter 9: Diagnostic Tools
+
+`\chaptermark{Diagnostic Tools}`{=latex}
 
 The single most valuable diagnostic tool I have found is a good visualization view for the graph. Mine is done using the D3.js library's "force" example, where nodes and edges are treated like masses and springs floating in a 2-D space. A well-designed graph explorer does more than render nodes and edges -- it gives you the controls to interrogate the graph and diagnose what's in it.
 
@@ -612,6 +605,8 @@ What can you learn from graph visualization as a diagnostic? Plenty. You can qui
 Zoom, pan, and reset complete the interface. The goal is to make the graph inspectable -- to turn "does the pipeline work?" into a question you can answer by looking.
 
 ## Chapter 10: The Ingestion Pipeline
+
+`\chaptermark{The Ingestion Pipeline}`{=latex}
 
 ### Why Multiple Passes at All
 
@@ -655,9 +650,9 @@ Large ingestion runs fail partway through. A run over 100,000 documents will hit
 
 Design for restartability from the beginning. Each document should have a processing status: not started, in progress, completed, failed. The pipeline should record which documents have been fully processed and which haven't. On restart, it should skip completed documents and resume from the first incomplete one. Checkpointing within a document -- if a single document requires multiple LLM calls, record which chunks have been processed -- can help for very long documents, though the document is usually the right granularity. The progress store should be persistent and survive process restarts. This isn't glamorous work. It's the difference between a pipeline you can run once as a demo and a pipeline you can run every week as part of your workflow.
 
----
-
 ## Chapter 11: Identity and Canonicalization
+
+`\chaptermark{Identity and Canonicalization}`{=latex}
 
 ### Identity Is Load-Bearing
 
@@ -685,7 +680,7 @@ If the primary key is a canonical ID from an established authority -- a UMLS CUI
 
 Treating canonical IDs as primary keys also forces the right question at the right time. At ingestion, you must answer "what is this entity, really?" You can't defer it to query time, because the graph structure depends on the answer. That forces you to build resolution into the pipeline rather than bolting it on later, when retrofitting is painful.
 
-### Authority Lookup: The Domain-Specific Part
+### Authority Lookup
 
 In medicine there are established ontological authorities: UMLS for diseases and symptoms, HGNC for genes, RxNorm for drugs, UniProt for proteins. These are curated, maintained, and widely used. When your extraction produces "ketoconazole," you can look it up in RxNorm and get back a canonical drug ID. When it produces "Cushing's disease," you can look it up in UMLS and get back a CUI. The authority does the work of disambiguation -- "Cushing's disease" (pituitary adenoma) versus "Cushing's syndrome" (the broader clinical picture) -- and gives you a stable identifier for each.
 
@@ -719,9 +714,9 @@ The cache should be persistent across pipeline runs. A run that processes docume
 
 Cache invalidation is the classic hard problem. Authorities update: new drugs get added to RxNorm, disease classifications change in UMLS. If your cache never updates, you'll eventually have stale mappings. A practical approach: cache with a timestamp or version, and periodically refresh entries that are older than a threshold. Or accept that the cache is eventually consistent and that a full pipeline rerun will correct any drift. The right choice depends on how often your authorities change and how critical freshness is for your use case.
 
----
-
 ## Chapter 12: Provenance and Trust
+
+`\chaptermark{Provenance and Trust}`{=latex}
 
 ### Domain-Dependent Honesty
 
@@ -769,11 +764,11 @@ Whether you need that capability depends on your domain and your users. A resear
 
 If you do need provenance at query time, design for it from the start. The query interface should support "give me this relationship and its provenance" as a first-class operation. The API response should include source documents, passages, confidence, and whatever else your schema captures. Retrofitting this into a schema that stored relationships without provenance, or into a server that never exposed it, is painful. You'd need to re-ingest to capture what wasn't captured, and you'd need to extend the API to return what wasn't designed to be returned. Get it right early.
 
----
-
 # Part IV: What It Makes Possible
 
 ## Chapter 13: What Your Graph Can Do
+
+`\chaptermark{What Your Graph Can Do}`{=latex}
 
 The value of the graph is in what grounded reasoning becomes possible, not in the serving layer. Evidence, not instruction.
 
@@ -833,9 +828,9 @@ A brief callback to Part I. Chapter 2 described the vision; Chapter 4 argued tha
 
 Adam and Eve had curated knowledge bases, hypothesis generation from structural patterns, and automated experiment design. You have extracted knowledge from literature, hypothesis generation from graph traversal, and the ability to ground an LLM in that graph for synthesis and explanation. The substrate is different -- they used formal logic and lab robotics; you use graphs and language models -- but the architecture is recognizably the same. Represent the domain explicitly. Generate candidates from structure. Ground the reasoning in that representation. The tools have changed. The need for that layer has not.
 
----
-
 ## Chapter 14: The Augmented Researcher
+
+`\chaptermark{The Augmented Researcher}`{=latex}
 
 ### What Machines Would See That We Can't
 
@@ -875,9 +870,9 @@ The honest answer: close enough to see the path, not close enough to declare vic
 
 The ability to affordably construct large knowledge graphs that cross domains could enable the automation-of-science idea in a way that Adam's narrow domain could not. A graph that spans drug discovery, disease biology, and chemical space could generate hypotheses that connect compounds, targets, and indications across literatures that no single human could synthesize. That could help science advance farther and more rapidly. What might that do for society? Would our life be more like Star Trek? The question is worth sitting with. The technology to build the graphs is here. The question of what we do with what they enable is just beginning.
 
----
-
 ## Chapter 15: Who Benefits, Who Decides
+
+`\chaptermark{Who Benefits, Who Decides}`{=latex}
 
 ### Democratization and Its Limits
 
@@ -907,9 +902,9 @@ Open versus proprietary is not a new tension in science. GenBank, the repository
 
 If a single entity -- a company, a government, a consortium -- controls the graph, that entity controls who can query it, what they can do with the results, and how the graph evolves. The incentives may align with the scientific commons, or they may not. A company that built a drug-discovery KG might restrict access to protect competitive advantage. A government might restrict access for national security reasons. An open consortium might make the graph freely available but lack the resources to maintain it. The historical analogies are instructive: GenBank succeeded because the community agreed that sequence data should be a commons; clinical trial data remains contested because the incentives are mixed. A knowledge graph over a domain like medicine or materials science will face the same tensions. What it would mean for a single entity to control it -- the power to shape what gets synthesized, what gets surfaced, what gets updated -- is worth thinking about before it happens.
 
----
-
 ## Chapter 16: The Inference You Didn't Intend
+
+`\chaptermark{The Inference You Didn't Intend}`{=latex}
 
 ### The Architecture of Expertise
 
@@ -941,9 +936,9 @@ What do you owe to the users of the system you build? At minimum, you owe them h
 
 Beyond that, the builder's choices about provenance, transparency, access, and schema design are ethical choices, not just technical ones. Deciding what to extract, how to represent it, who gets to query it, and what gets logged -- these decisions shape how the system will be used and what consequences it will have. That doesn't mean every builder must solve every ethical problem before shipping. It means the builder is a stakeholder, with some power to shape outcomes. The right response isn't paralysis. It's to take the responsibility seriously, to build with the foreseeable consequences in mind, and to create the conditions for accountability when things go wrong. You built something capable. That capability comes with responsibility.
 
----
-
 ## Chapter 17: What's Next
+
+`\chaptermark{What's Next}`{=latex}
 
 ### Open Problems
 
